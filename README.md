@@ -1,53 +1,63 @@
-Cartoonify an Image with OpenCV in Python
-turning a real photo into a cartoon is fun and popular in image editing. With Python and OpenCV, we can build a project that cartoonifies an image in just a few steps. This uses basic image processing techniques, not deep learning. It’s a great starting point for beginners who want to learn OpenCV and how images are handled by computers.
+# Cartoonify an Image with OpenCV in Python.
 
-We have successfully developed Image Cartoonifier with OpenCV in Python. This is the magic of openCV which let us do miracles. We suggest you make a photo editor of your own and try different effects.
+Here, I aim to transform images into its cartoon. Yes, I will make cartoon of the images. Thus, let's build a python application that will transform an image into its cartoon using OpenCV.
 
-This project is creative and easy to try with your own photos. It teaches key skills like reading images, applying filters, using edge detection, and color space changes in OpenCV. You can build a simple GUI where users can upload and cartoonify images. It’s fun for school projects, social media apps, or just learning computer vision basics with Python.
+# Step 1: Importing the required modules.
+Import the following modules:
 
-Methodology
-The cartoonifying process is carried out through a sequence of structured steps. Each stage plays an important role in shaping the final visual effect.
-  1. Reading and Preparing the Image
+1. CV2: Imported to use OpenCV for image processing </br>
+2. easygui: Imported to open a file box. It allows us to select any file from our system.</br>
+3. Numpy: Images are stored and processed as numbers. These are taken as arrays. We use NumPy to deal with arrays.</br>
+4. Imageio: Used to read the file which is chosen by file box using a path.</br>
+5. Matplotlib: This library is used for visualization and plotting. Thus, it is imported to form the plot of images.</br>
+6. OS: For OS interaction. Here, to read the path and save images to that path.</br>
 
-The process begins by loading the selected image into the program. OpenCV reads an image as an array of pixel values using the imread function. When OpenCV loads an 
-image, it stores the colour channels in the order Blue, Green and Red. However, many display libraries and image processing conventions use the Red, Green and Blue format. To ensure proper colour representation, the image is converted from BGR to RGB using the cvtColor function. This conversion ensures that the subsequent image processing steps interpret colour values correctly. It also guarantees that visualisations match the expected colours when displaying the output.
+# Step 2: Building a File Box to choose a particular file.
+In this step, build the main window of application, where the buttons, labels, and images will reside. Also give it a title by title() function.
 
+Explanation:
+fileopenbox() is the method in easyGUI module which returns the path of the chosen file as a string. It opens the file box, i.e the pop-up box to choose the file from the device, which opens every time while running the code.
+NOTE: Now, all the operation will be done on the button click, thus all the below steps are the part of function cartoonify (ImagePath)
 
- 2. Converting the Image to Grayscale
+# Step 3: How to store an Image?
+For a computer, everything is just numbers. Thus, convert an image into a numpy array.</br>
+<ul>
+<li> .imread() is a method in cv2 which is used to store images in the form of numbers. This helps to perform operations according to needs. </li>
+<li> The image is read as a numpy array, in which cell values depict R, G, and B values of a pixel. Resize the image after each transformation to display all the images on a similar scale at last.</li>
+<li> To convert an image to a cartoon, multiple transformations are done. Firstly, an image is converted to a Grayscale image.</li>
+<li> Then, the Grayscale image is smoothened, and then try to extract the edges in the image.</li>
+<li> Finally, form a color image and mask it with edges. This creates a beautiful cartoon image with edges and lightened color of the original image.</li>
+</ul>
 
-A grayscale image contains brightness information only. Each pixel represents intensity rather than a combination of colours. Converting the image to grayscale simplifies the data and reduces computational load. More importantly, edge detection techniques work more effectively with grayscale images because brightness transitions directly indicate potential boundaries. The grayscale conversion is performed using the cvtColor function with the RGB to grayscale option. This step prepares the image for noise reduction and edge extraction.
+# Step 4: Transforming an image to grayscale
+cvtColor(image, flag) is a method in cv2 which is used to transform an image into the colour-space mentioned as ‘flag’. Here, first step is to convert the image into grayscale. Thus, use the BGR2GRAY flag. This returns the image in grayscale. A grayscale image is stored as grayScaleImage.</br>
 
- 
+After each transformation, resize the resultant image using the resize() method in cv2 and display it using imshow() method. This is done to get more clear insights into every single transformation step.
 
-3. Reducing Noise With Median Blurring
-Natural images often contain noise or tiny variations in intensity that may interfere with clean edge detection. To address this, a median blur filter is applied. Median filtering is a non linear smoothing technique that reduces noise while retaining important edges. Unlike other blurring methods, the median filter does not significantly blur strong edges, which is important because edges are a major feature in the cartoon effect.
+# Step 5: Smoothening a grayscale image
+To smoothen an image, simply apply a blur effect. This is done using medianBlur() function. Here, the center pixel is assigned a mean value of all the pixels which fall under the kernel. In turn, creating a blur effect.
 
- 
+# Step 6: Retrieving the edges of an image
+Cartoon effect has two specialties: Highlighted Edges and Smooth colors.</br>
+In this step, For Highlighting edges try to retrieve the edges and highlight them. This is attained by the adaptive thresholding technique.</br>
 
-4. Extracting Edges Using Adaptive Thresholding
-A cartoon image typically contains bold outlines. These outlines are created by generating an edge mask from the grayscale image. Adaptive thresholding is used because it calculates threshold values for small regions of the image instead of applying one global threshold. This results in a more accurate representation of edges, even when lighting varies across the image.  Adaptive thresholding produces a binary image where the outlines appear in black and the remaining areas appear white. This binary mask later becomes the foundation for the cartoon outlines.
+# Step 7: Preparing a Mask Image
+Now, prepare a lightened color image to mask with edges at the end to produce a cartoon image. Use bilateralFilter which removes the noise. It can be taken as smoothening of an image to an extent.</br>
 
+The third parameter is the diameter of the pixel neighborhood, i.e, the number of pixels around a certain pixel which will determine its value. The fourth and Fifth parameter defines signmaColor and sigmaSpace. These parameters are used to give a sigma effect, i.e make an image look vicious and like water paint, removing the roughness in colors. It’s similar to BEAUTIFY or AI effect in cameras of modern mobile phones.
 
+# Step 8: Giving a Cartoon Effect
+let’s combine the two specialties. This will be done using MASKING. Perform bitwise and on two images to mask them.
 
+# Step 9: Plotting all the transitions together
+To plot all the images, first make a list of all the images. The list here is named “images” and contains all the resized images. Now, create axes in a plot and display one-one images in each block on the axis using imshow() method. plt.show() plots the whole plot at once after we plot on each subplot. Figure_1.png showas all the transitions.
 
+# Step 10: Functionally of save button
 
-5. Smoothing Colours With Bilateral Filtering
- To create flat and smooth colour regions similar to cartoon illustrations, a bilateral filter is applied to the original colour image. The bilateral filter is unique because it smooths colours while keeping edges sharp. This characteristic makes it ideal for artistic effects. While standard blurring techniques wash out edges, the bilateral filter preserves them, producing a painted appearance. The filter reduces unnecessary details such as texture or fine patterns, which contributes to the simplified cartoon look.  
+Here, the idea is to save the resultant image. For this, we take the old path, and just change the tail (name of the old file) to a new name and store the cartoonified image with a new name in the same folder by appending the new name to the head part of the file.
 
+# Step 11: Make the main window, Make the Cartoonify button in the main window and Make a Save button in the main window.
 
-
-6. Combining the Edge Mask With the Smoothed Colour Image
- The final cartoon image is formed by merging the binary edge mask with the colour smoothed image. This is done using a bitwise operation. The edge mask highlights the boundaries, while the filtered colour image provides vibrancy and smoothness. When the two are combined, the result appears similar to hand drawn illustrations where bold outlines define simplified colour regions.
-  
-
-
-
-
-
-
-7. Displaying and Saving the Output
- The final step involves displaying the intermediate and final images to the user. This allows the user to observe the transformation clearly. The cartoon version can then be saved to the system using the imwrite function. Many implementations also include a simple graphical interface that allows users to select an image easily.
-
-
-
-
+# Step 12: Main function to build the tkinter window
+Use top.mainloop() for building tkinter window.
+Here, the idea is to save the resultant image. For this, we take the old path, and just change the tail (name of the old file) to a new name and store the cartoonified image with a new name in the same folder by appending the new name to the head part of the file.
